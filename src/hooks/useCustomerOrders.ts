@@ -13,6 +13,9 @@ interface UseCustomerOrdersResult {
   error: string | null;
   refetch: () => void;
   currentPhone: string | null;
+  page: number;
+  totalPages: number;
+  setPage: (page: number) => void;
 }
 
 export function useCustomerOrders(): UseCustomerOrdersResult {
@@ -21,6 +24,8 @@ export function useCustomerOrders(): UseCustomerOrdersResult {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPhone, setCurrentPhone] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const abortRef = useRef<AbortController | null>(null);
 
   // Fetch phone from profile API if logged in
@@ -73,7 +78,7 @@ export function useCustomerOrders(): UseCustomerOrdersResult {
     setError(null);
 
     try {
-      const url = `${API}/orders?phone=${encodeURIComponent(currentPhone)}&limit=50`;
+      const url = `${API}/customer/orders?phone=${encodeURIComponent(currentPhone)}&page=${page}&limit=10`;
 
       const res = await fetch(url, {
         credentials: "include",
@@ -100,6 +105,7 @@ export function useCustomerOrders(): UseCustomerOrdersResult {
         : [];
       
       setOrders(ordersList);
+      setTotalPages(json?.data?.pages || 1);
     } catch (e: any) {
       if (e?.name === "AbortError") return;
       console.error("useCustomerOrders error:", e);
@@ -108,7 +114,7 @@ export function useCustomerOrders(): UseCustomerOrdersResult {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPhone]);
+  }, [currentPhone, page]);
 
   useEffect(() => {
     fetchOrders();
@@ -121,5 +127,8 @@ export function useCustomerOrders(): UseCustomerOrdersResult {
     error,
     refetch: fetchOrders,
     currentPhone,
+    page,
+    totalPages,
+    setPage,
   };
 }

@@ -121,7 +121,7 @@ export default function ProfilePage() {
     setErr(null);
     setOrders([]);
     try {
-      const u1 = `${API}/orders?phone=${encodeURIComponent(ph)}`;
+      const u1 = `${API}/customer/orders?phone=${encodeURIComponent(ph)}`;
       const res1 = await fetch(u1, {
         cache: "no-store",
         headers: { "content-type": "application/json" },
@@ -131,17 +131,7 @@ export default function ProfilePage() {
       if (res1.ok) {
         data = await res1.json();
       } else {
-        const u2 = `${API}/orders?customerPhone=${encodeURIComponent(ph)}`;
-        const res2 = await fetch(u2, {
-          cache: "no-store",
-          headers: { "content-type": "application/json" },
-        });
-        if (!res2.ok) {
-          throw new Error(
-            `Failed to load orders (${res1.status}/${res2.status})`
-          );
-        }
-        data = await res2.json();
+        throw new Error(`Failed to load orders (${res1.status})`);
       }
 
       const arr: Order[] = Array.isArray(data?.data?.items) 

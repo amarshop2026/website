@@ -63,6 +63,15 @@ export default function Footer() {
               <span>Quick Links</span>
             </h4>
             <ul className="space-y-2.5">
+                 <li>
+                <Link
+                  href="/privacy-policy"
+                  className="hover:text-[#167389] hover:pl-2 transition-all duration-200 inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 rounded"
+                  title="Privacy Policy"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/profile"
@@ -117,6 +126,7 @@ export default function Footer() {
                   About Us
                 </Link>
               </li>
+           
             </ul>
           </div>
 
@@ -244,7 +254,7 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
               <Link
-                href="/privacy"
+                href="/privacy-policy"
                 className="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 rounded"
                 title="Privacy Policy"
               >
