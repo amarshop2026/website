@@ -245,12 +245,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t py-5 sm:py-6">
+        <div className="border-t pt-5 sm:pt-6 pb-24">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs sm:text-sm text-black">
             <p className="text-center sm:text-left">
-              © {currentYear}{" "}
-              <span className="font-semibold text-[#167389]">{brand}</span>. All
-              rights reserved.
+              © {currentYear} <span className="font-semibold text-[#167389]">{brand}</span>. All rights reserved. | Designed & Developed by <a href="https://webq.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-[#167389] hover:underline transition-colors">WebQ Ltd</a>
             </p>
             <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
               <Link

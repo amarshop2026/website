@@ -241,7 +241,9 @@ export default function ProductCard({
 
         {/* Quantity Selector with Stock */}
         <div className={`flex items-center justify-between ${compact ? "mb-1.5" : "mb-2"}`}>
-          <span className="text-sm text-green-600 font-semibold">
+          <span className={`text-xs font-medium ${
+            isOut ? "text-red-600" : "text-green-600"
+          }`}>
             Stock: {available}
           </span>
           <span
@@ -249,7 +251,7 @@ export default function ProductCard({
               compact ? "text-xs" : "text-xs"
             }`}
           >
-            Qty:
+          
           </span>
           <div className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-0.5">
             <button
@@ -293,7 +295,7 @@ export default function ProductCard({
               className={`flex-1 flex items-center justify-center gap-2 font-semibold rounded-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 ${
                 compact
                   ? "px-2 py-1.5 text-xs bg-[#167389] text-white"
-                  : "px-3 py-2 text-sm bg-[#167389] text-white hover:bg-[#135a6b]"
+                  : "px-3 py-2 text-xs bg-[#167389] text-white hover:bg-[#135a6b]"
               }`}
             >
               {adding ? "Adding..." : "Add to Bag"}
@@ -305,10 +307,9 @@ export default function ProductCard({
               className={`flex-1 flex items-center justify-center gap-2 font-semibold rounded-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 ${
                 compact
                   ? "px-2 py-1.5 text-xs bg-linear-to-r from-pink-600 to-rose-600 text-white"
-                  : "px-3 py-2 text-sm bg-linear-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700"
+                  : "px-3 py-2 text-xs bg-linear-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700"
               }`}
             >
-              <Eye className={compact ? "w-3 h-3" : "w-4 h-4"} />
               <span>{buying ? "Buying..." : "Buy Now"}</span>
             </button>
           </div>
@@ -368,7 +369,9 @@ export default function ProductCard({
           {isOut ? (
             <span className="text-red-600 font-semibold">Out of Stock</span>
           ) : (
-            <span className="text-green-600 font-semibold">Stock: {available}</span>
+            <span className={`font-semibold ${
+              isOut ? "text-red-600" : "text-green-600"
+            }`}>Stock: {available}</span>
           )}
         </div>
         <div className="flex items-center gap-0.5 bg-gray-200 rounded px-0.5 py-0.5">

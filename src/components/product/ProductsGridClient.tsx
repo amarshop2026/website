@@ -389,8 +389,10 @@ export default function ProductsGridClient({
                       ৳{Number(p.compareAtPrice).toLocaleString()}
                     </div>
                   )}
-                  <div className="text-xs text-gray-500 mt-1">
-                    🕘 Est. delivery
+                  <div className={`text-xs font-medium mt-1 ${
+                    available <= 0 ? "text-red-600" : "text-green-600"
+                  }`}>
+                    Stock: {stock}
                   </div>
                 </div>
               </div>

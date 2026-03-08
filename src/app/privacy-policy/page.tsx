@@ -1,12 +1,12 @@
 export default function PrivacyPolicy() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 text-gray-900">
-      <h1 className="text-3xl font-bold mb-4 text-black">AmaarShop Privacy Policy</h1>
+    <div className="max-w-7xl mx-auto px-4 py-16 text-gray-900">
+      <h1 className="text-2xl md:text-3xl font-bold mb-4 text-black">AmaarShop Privacy Policy</h1>
       <p className="text-sm text-gray-700 mb-6">Effective Date: February 28, 2026</p>
 
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-3 text-black">Introduction</h2>
-        <p className="text-gray-800">Welcome to AmaarShopBD (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website (http://www.amaarshopbd.com) or use our mobile application (the &quot;App&quot;). Please read this policy carefully.</p>
+        <p className="text-gray-800">Welcome to AmaarShop (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website (http://www.amaarshopbd.com) or use our mobile application (the &quot;App&quot;). Please read this policy carefully.</p>
       </section>
 
       <section className="mb-6">
