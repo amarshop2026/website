@@ -155,7 +155,7 @@ export default function Topbar() {
             : "bg-[#167389] border-b border-[#1a8ba5]"
         )}
       >
-        <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 h-[120px] lg:h-[80px] pb-2 lg:pb-0">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 h-[120px] lg:h-20 pb-2 lg:pb-0">
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-3 md:gap-4 py-2.5 sm:py-3 md:py-4 ">
             {/* ✅ Left: Logo */}
             <Link
@@ -475,7 +475,7 @@ export default function Topbar() {
         )}
       </AnimatePresence>
 
-      <div className="h-[120px] lg:h-[80px]" />
+      <div className="h-[70px] lg:h-20" />
     </>
   );
 }
