@@ -46,6 +46,17 @@ const CustomerSchema = AddressSchema.extend({
     blockOrThana: z.string().min(2, "Please enter your block/thana"),
     district: z.string().min(2, "Please enter your district name"),
   }),
+}).transform((data) => {
+  // Ensure billing address doesn't have separate name/phone - it should use main customer fields
+  return {
+    ...data,
+    billingAddress: {
+      houseOrVillage: data.billingAddress.houseOrVillage,
+      roadOrPostOffice: data.billingAddress.roadOrPostOffice,
+      blockOrThana: data.billingAddress.blockOrThana,
+      district: data.billingAddress.district,
+    }
+  };
 });
 
 export type CustomerFormData = z.infer<typeof CustomerSchema>;
@@ -73,13 +84,12 @@ export default function CustomerInfoForm({ onSubmit, isSubmitting, initialData }
   // Reset form when initialData changes
   useEffect(() => {
     if (initialData) {
-      console.log('Resetting form with:', initialData);
       reset(initialData);
     }
   }, [initialData, reset]);
 
   const handleFormSubmit = async (data: CustomerFormData) => {
-    try {
+      try {
       await onSubmit(data);
       toast.success("Order submitted successfully!");
       reset();
@@ -138,7 +148,7 @@ export default function CustomerInfoForm({ onSubmit, isSubmitting, initialData }
             {...register("phone")}
             placeholder="01XXXXXXXXX"
             className={inputClass(!!errors.phone)}
-            autoComplete="tel"
+            autoComplete="off"
           />
         </div>
         {errors.phone && (

@@ -6,6 +6,7 @@ import type {
   OrderCreateResult,
   ApiErr,
 } from "@/types/order";
+import { isUserAuthenticated, STORAGE_KEYS } from "@/lib/localStorage";
 
 const API = process.env.NEXT_PUBLIC_API_BASE_URL!;
 if (!API) throw new Error("NEXT_PUBLIC_API_BASE_URL is missing");
@@ -102,10 +103,13 @@ export async function createOrder(
       throw err;
     }
 
-    // on success persist phone locally (best-effort)
+    // on success persist phone locally (best-effort) - ONLY for guest users
     try {
       if (payload.customer?.phone && typeof window !== "undefined") {
-        localStorage.setItem("customer_phone", payload.customer.phone);
+        // Only save if user is not authenticated (guest checkout)
+        if (!isUserAuthenticated()) {
+          localStorage.setItem(STORAGE_KEYS.CUSTOMER_PHONE, payload.customer.phone);
+        }
       }
     } catch (e) {
       console.warn("Failed to persist customer_phone locally", e);

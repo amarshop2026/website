@@ -18,7 +18,6 @@ export default async function apiGet<T>(path: string, init?: RequestInit): Promi
       },
     });
 
-    // console.log(`API Call: ${url} -> Status: ${res.status}`);
 
     if (!res.ok) {
       const errorText = await res.text();

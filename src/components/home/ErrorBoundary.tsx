@@ -34,8 +34,6 @@ class ErrorBoundary extends Component<Props, State> {
       error: error,
       errorInfo: errorInfo,
     });
-    console.log("ERROR BOUNDARY CAUGHT:", error);
-    console.log("COMPONENT STACK:", errorInfo.componentStack);
   }
 
   render() {

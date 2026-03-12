@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setAuth } from "@/store/authSlice";
 import { authApi } from "@/services/auth.api";
+import { clearGuestData } from "@/lib/localStorage";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -30,6 +31,9 @@ export default function LoginPage() {
       if (!response.ok || !response.data) {
         throw new Error(response.message || "Invalid email or password");
       }
+
+      // Clear any old guest/customer data before setting new auth
+      clearGuestData();
 
       dispatch(setAuth({
         user: response.data.customer,

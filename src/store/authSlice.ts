@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { User, AuthState } from "@/types/auth";
+import { clearAllCustomerData } from "@/lib/localStorage";
 
 const initialState: AuthState = {
   user: null,
@@ -13,6 +14,9 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setAuth(state, action: PayloadAction<{ user: User; token: string; refreshToken?: string }>) {
+      // Clear any old guest/customer data before setting new auth
+      clearAllCustomerData();
+      
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.refreshToken = action.payload.refreshToken || null;
@@ -62,16 +66,8 @@ const authSlice = createSlice({
       state.token = null;
       state.refreshToken = null;
       state.isHydrated = true;
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("user");
-        localStorage.removeItem("customer_phone");
-        localStorage.removeItem("checkout_customer");
-        localStorage.removeItem("order_customer");
-        localStorage.removeItem("customer");
-        localStorage.removeItem("shipping_info");
-      }
+      // Use utility function for complete cleanup
+      clearAllCustomerData();
     },
   },
 });

@@ -38,7 +38,6 @@ export default function MyOrdersPage() {
 
   // ✅ FORCE REFRESH FUNCTION
   const handleForceRefresh = async () => {
-    console.log("🔄 Manual refresh triggered");
     await refetch();
     setRenderKey((prev) => prev + 1);
   };

@@ -48,9 +48,6 @@ export default function CheckoutPage() {
       return;
     }
 
-    // ✅ Save customer phone for order tracking
-    localStorage.setItem("customer_phone", customerData.phone);
-
     // ✅ PREPARE PROPER PAYLOAD STRUCTURE
     const customer: any = {
       name: customerData.name,
@@ -61,8 +58,15 @@ export default function CheckoutPage() {
       district: customerData.district,
     };
 
-    // Always send billing address (required)
-    customer.billingAddress = customerData.billingAddress;
+
+    // Always send billing address (required) - but only address fields, not name/phone
+    customer.billingAddress = {
+      houseOrVillage: customerData.billingAddress.houseOrVillage,
+      roadOrPostOffice: customerData.billingAddress.roadOrPostOffice,
+      blockOrThana: customerData.billingAddress.blockOrThana,
+      district: customerData.billingAddress.district,
+    };
+    
 
     const payload = {
       items: items.map((it) => ({
@@ -77,7 +81,6 @@ export default function CheckoutPage() {
       },
     };
 
-    console.log("✅ Final order payload:", payload);
 
     try {
       setIsSubmitting(true);
@@ -90,6 +93,11 @@ export default function CheckoutPage() {
 
       if (result.ok) {
         toast.success("Order placed successfully!");
+
+        // ✅ Save customer phone ONLY for guests (for order tracking)
+        if (isGuest && customerData.phone) {
+          localStorage.setItem("customer_phone", customerData.phone);
+        }
 
         // ✅ CLEAR CART AFTER SUCCESSFUL ORDER
         clearCart();

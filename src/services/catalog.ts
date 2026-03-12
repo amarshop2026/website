@@ -594,7 +594,6 @@ export async function fetchBanners(params?: {
             updatedAt: new Date().toISOString(),
           } as Banner);
 
-    console.log("✅ Fallback banner loaded:", fallbackBanner.title);
 
     return { ok: true as const, data: [fallbackBanner] };
   } catch (error) {
