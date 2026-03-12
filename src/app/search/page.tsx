@@ -4,7 +4,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useMemo, useEffect, useState, useCallback } from "react";
+import { useMemo, useEffect, useState, useCallback, useRef } from "react";
 import {
   useGetProductsPaginatedQuery,
   useLazyGetProductsPaginatedQuery,
@@ -112,6 +112,7 @@ export default function SearchPageRTK() {
 
   // load more handler using RTK lazy trigger
   const loadMore = async () => {
+    if (isFetchingNext || !hasMore) return;
     setLoadError(null);
     try {
       const nextPage = (page || 1) + 1;
@@ -125,6 +126,31 @@ export default function SearchPageRTK() {
       setLoadError(err?.message ?? "Failed to load more");
     }
   };
+
+  // Infinite scroll: detect when user scrolls near bottom
+  const observerTarget = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetchingNext) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [hasMore, isFetchingNext, page, queryArg]);
 
   const parsedProducts = items.map((p) => {
     try {
@@ -546,27 +572,25 @@ export default function SearchPageRTK() {
             })}
           </div>
 
-          {/* pagination / load more */}
-          <div className="flex flex-col items-center mt-8 gap-3">
+          {/* Infinite scroll trigger */}
+          <div ref={observerTarget} className="flex flex-col items-center mt-8 gap-3">
             {loadError && (
               <div className="text-sm text-red-600">{loadError}</div>
             )}
-            {hasMore ? (
-              <button
-                onClick={loadMore}
-                disabled={isFetchingNext}
-                className="px-6 py-3 rounded-full bg-[#167389] text-white font-semibold hover:opacity-95 disabled:opacity-60"
-              >
-                {isFetchingNext ? "Loading..." : "View more"}
-              </button>
-            ) : (
+            {isFetchingNext && (
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-10 h-10 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin"></div>
+                <p className="text-sm text-gray-600">Loading more products...</p>
+              </div>
+            )}
+            {!hasMore && parsedProducts.length > 0 && (
               <div className="text-sm text-gray-500">No more products</div>
             )}
-            {pages ? (
+            {pages && (
               <div className="text-xs text-gray-500">
                 Page {page} of {pages}
               </div>
-            ) : null}
+            )}
           </div>
         </>
       ) : (
