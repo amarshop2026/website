@@ -52,14 +52,17 @@ export default function HomePage() {
   const { data: catRes, isLoading: catLoading } = useGetCategoriesQuery();
   const { data: hotRes, isLoading: hotLoading } = useGetProductsQuery({
     limit: 16,
+    inStock: "true",
   });
   const { data: newRes, isLoading: newLoading } = useGetProductsQuery({
     limit: 16,
     sort: "new",
+    inStock: "true",
   });
   const { data: pickRes, isLoading: pickLoading } = useGetProductsQuery({
     limit: 16,
     tag: "featured",
+    inStock: "true",
   });
 
   const loading = catLoading || hotLoading || newLoading || pickLoading;
@@ -70,34 +73,9 @@ export default function HomePage() {
     : extractItems<Category>(catRes);
 
   // Normalize product sections with useMemo for performance
-  const hotDealsAll = useMemo(() => extractItems<Product>(hotRes), [hotRes]);
-  const newArrivalsAll = useMemo(() => extractItems<Product>(newRes), [newRes]);
-  const editorsPicksAll = useMemo(
-    () => extractItems<Product>(pickRes),
-    [pickRes]
-  );
-
-  // Filter in-stock items with useMemo
-  const filterInStock = useMemo(
-    () => (arr: Product[]) =>
-      arr.filter((p) => Number(p?.stock ?? p?.availableStock ?? 0) > 0),
-    []
-  );
-
-  const hotDeals = useMemo(
-    () => filterInStock(hotDealsAll).slice(0, 8),
-    [hotDealsAll, filterInStock]
-  );
-
-  const newArrivals = useMemo(
-    () => filterInStock(newArrivalsAll).slice(0, 8),
-    [newArrivalsAll, filterInStock]
-  );
-
-  const editorsPicks = useMemo(
-    () => filterInStock(editorsPicksAll).slice(0, 8),
-    [editorsPicksAll, filterInStock]
-  );
+  const hotDeals = useMemo(() => extractItems<Product>(hotRes).slice(0, 8), [hotRes]);
+  const newArrivals = useMemo(() => extractItems<Product>(newRes).slice(0, 8), [newRes]);
+  const editorsPicks = useMemo(() => extractItems<Product>(pickRes).slice(0, 8), [pickRes]);
 
   if (!isMounted) {
     return (

@@ -79,6 +79,7 @@ export default function CategoryProducts({
       const url = new URL(`${API}/products`);
       if (categorySlug) url.searchParams.set("category", categorySlug);
       if (subcategorySlug) url.searchParams.set("subcategory", subcategorySlug);
+      url.searchParams.set("inStock", "true");
       url.searchParams.set("limit", String(PAGE_SIZE));
       url.searchParams.set("page", String(page + 1)); // because server pages are 1-based and we already have page items
       // Note: If your backend uses skip/limit instead of page/limit, change accordingly:

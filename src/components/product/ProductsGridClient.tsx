@@ -59,6 +59,7 @@ export default function ProductsGridClient({
         limit: meta.limit,
         category: category ?? undefined,
         q: q ?? undefined,
+        inStock: "true",
       });
 
       if (!res || !res.ok) throw new Error("Bad response from API");

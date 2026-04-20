@@ -35,7 +35,7 @@ function buildQueryArg(sp: URLSearchParams): ProductsQuery {
     sortParam === "new" || sortParam === "createdAt:desc"
       ? "createdAt:desc"
       : undefined;
-  return { discounted, featured, tag, sort, limit: 24, page: 1 };
+  return { discounted, featured, tag, sort, inStock: "true", limit: 24, page: 1 };
 }
 
 export default function SearchPageRTK() {

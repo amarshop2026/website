@@ -25,7 +25,7 @@ export default async function CategoryView({ slug, isSubcategory = false }: Cate
     // Fetch subcategory data and products
     const [subcategoriesRes, productsRes] = await Promise.all([
       fetchSubcategories().catch(() => ({ ok: true, data: [] })),
-      fetchProducts({ subcategory: slug, limit: 8 }).catch(() => ({
+      fetchProducts({ subcategory: slug, limit: 8, inStock: "true" }).catch(() => ({
         ok: true,
         data: [] as Product[],
       })),
@@ -92,7 +92,7 @@ export default async function CategoryView({ slug, isSubcategory = false }: Cate
   // Original category logic
   const [categoriesRes, productsRes] = await Promise.all([
     fetchCategories().catch(() => ({ ok: true, data: [] as Category[] })),
-    fetchProducts({ category: slug, limit: 8 }).catch(() => ({
+    fetchProducts({ category: slug, limit: 8, inStock: "true" }).catch(() => ({
       ok: true,
       data: [] as Product[],
     })),

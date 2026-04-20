@@ -34,6 +34,7 @@ export type ProductsQuery = {
   brand?: string;
   discounted?: "true" | "false";
   featured?: "true" | "false";
+  inStock?: "true" | "false";
   limit?: number;
   page?: number;
   status?: "ACTIVE" | "DRAFT" | "HIDDEN";

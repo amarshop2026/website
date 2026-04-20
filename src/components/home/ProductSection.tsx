@@ -91,8 +91,8 @@ export default function ProductSection({
   }
 
   return (
-    <section className="py-3 lg:py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section>
+      <div className="product-section">
         {/* Section Header */}
         <div className="flex sm:flex-row sm:items-end sm:justify-between gap-2 lg:gap-4 mb-3 lg:mb-8">
           <div className="flex-1">

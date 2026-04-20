@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 
 const toNum = (v: unknown, f = 0) =>
@@ -35,6 +35,7 @@ export default React.memo(function ItemRow({
 
   // ✅ সরাসরি action সিলেক্টর ব্যবহার (stale snapshot নয়)
   const updateQuantity = useCartStore((s) => s.updateQuantity);
+  const removeItem = useCartStore((s) => s.removeItem);
 
   return (
     <motion.div className="flex items-center gap-3 p-3 bg-[#F5FDF8] rounded-xl border border-pink-100">
@@ -82,7 +83,16 @@ export default React.memo(function ItemRow({
         </div>
       </div>
 
-      <div className="font-bold text-pink-600">{money(lineTotal)}</div>
+      <div className="flex flex-col items-end gap-1">
+        <button
+          aria-label={`Remove ${item.title}`}
+          onClick={() => removeItem(item._id)}
+          className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+        <span className="font-bold text-pink-600 text-sm">{money(lineTotal)}</span>
+      </div>
     </motion.div>
   );
 });

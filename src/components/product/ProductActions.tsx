@@ -64,12 +64,16 @@ export default function ProductActions({
     setIsAdding(true);
 
     try {
+      const image =
+        product.image ||
+        (Array.isArray(product.images) ? product.images[0] : undefined);
+
       addItem({
         _id: product._id,
         title: product.title,
         slug: product.slug,
         price: product.price,
-        image: product.image,
+        image,
         quantity: quantity,
       });
 
