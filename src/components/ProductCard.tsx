@@ -66,7 +66,7 @@ export default function ProductCard({
 
   // local optimistic stock (starts from sourceStock)
   const [localStock, setLocalStock] = useState<number>(sourceStock);
-  const [quantity, setQuantity] = useState<number>(1);
+  const [quantity, setQuantity] = useState<number>(0);
   const [adding, setAdding] = useState(false);
   const [buying, setBuying] = useState(false);
 
@@ -98,7 +98,7 @@ export default function ProductCard({
   const updateQuantity = useCallback(
     (newQty: number) => {
       const safeQty = Math.max(
-        1,
+        0,
         Math.min(newQty, Math.max(1, available || 1))
       );
       setQuantity(safeQty);
@@ -117,6 +117,10 @@ export default function ProductCard({
   const handleAdd = async () => {
     if (isOut) {
       toast.error("Out of stock");
+      return;
+    }
+    if (quantity <= 0) {
+      toast.error("Please select a quantity");
       return;
     }
     if (quantity > available) {
@@ -143,7 +147,7 @@ export default function ProductCard({
       toast.success(`${quantity} × ${title} added to cart`);
 
       // Reset quantity after successful add
-      setQuantity(1);
+      setQuantity(0);
     } catch (e) {
       console.error("Add to Bag failed", e);
       toast.error("Failed to Add to Bag");
@@ -155,6 +159,10 @@ export default function ProductCard({
   const handleBuyNow = async () => {
     if (isOut) {
       toast.error("Out of stock");
+      return;
+    }
+    if (quantity <= 0) {
+      toast.error("Please select a quantity");
       return;
     }
 
@@ -256,7 +264,7 @@ export default function ProductCard({
           <div className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-0.5">
             <button
               onClick={decrementQuantity}
-              disabled={quantity <= 1 || adding || buying || isOut}
+              disabled={quantity <= 0 || adding || buying || isOut}
               className={`flex items-center justify-center rounded-md bg-white border border-gray-300 transition-all hover:bg-gray-50 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                 compact ? "w-6 h-6" : "w-6 h-6"
               }`}
@@ -377,7 +385,7 @@ export default function ProductCard({
         <div className="flex items-center gap-0.5 bg-gray-200 rounded px-0.5 py-0.5">
           <button
             onClick={decrementQuantity}
-            disabled={quantity <= 1 || adding || buying || isOut}
+            disabled={quantity <= 0 || adding || buying || isOut}
             className="w-4 h-4 rounded bg-white text-black flex items-center justify-center text-xs font-bold disabled:opacity-50"
           >
             −

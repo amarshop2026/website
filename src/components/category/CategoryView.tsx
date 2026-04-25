@@ -20,33 +20,46 @@ interface CategoryViewProps {
   isSubcategory?: boolean;
 }
 
+function extractMeta(raw: any) {
+  const items: Product[] = Array.isArray(raw)
+    ? raw
+    : Array.isArray(raw?.items)
+    ? raw.items
+    : [];
+  return {
+    items,
+    meta: {
+      page: Number(raw?.page ?? 1),
+      pages: Number(raw?.pages ?? 1),
+      total: Number(raw?.total ?? items.length),
+      limit: Number(raw?.limit ?? 24),
+    },
+  };
+}
+
 export default async function CategoryView({ slug, isSubcategory = false }: CategoryViewProps) {
   if (isSubcategory) {
-    // Fetch subcategory data and products
     const [subcategoriesRes, productsRes] = await Promise.all([
       fetchSubcategories().catch(() => ({ ok: true, data: [] })),
-      fetchProducts({ subcategory: slug, limit: 8, inStock: "true" }).catch(() => ({
+      fetchProducts({ subcategory: slug, limit: 24, inStock: "true" }).catch(() => ({
         ok: true,
-        data: [] as Product[],
+        data: { items: [] as Product[], page: 1, pages: 1, total: 0, limit: 24 },
       })),
     ]);
 
     const subcategories = subcategoriesRes?.data || [];
     const activeSubcategory = subcategories.find((s: any) => s.slug === slug);
-    
-    const rawProducts = (productsRes && (productsRes as any).data) || [];
-    const initialProducts: Product[] = Array.isArray(rawProducts) 
-      ? rawProducts 
-      : Array.isArray(rawProducts?.items) 
-      ? rawProducts.items 
-      : [];
+
+    const { items: initialProducts, meta: initialMeta } = extractMeta(
+      (productsRes as any)?.data
+    );
 
     const title = (activeSubcategory as any)?.name ?? decodeURIComponent(slug);
     const banners = (activeSubcategory as any)?.images?.length
       ? (activeSubcategory as any).images.map((image: string, index: number) => ({
           _id: `${(activeSubcategory as any)._id}-${index}`,
           title: title,
-          image: image
+          image: image,
         }))
       : [];
 
@@ -63,24 +76,23 @@ export default async function CategoryView({ slug, isSubcategory = false }: Cate
                   {title}
                 </h1>
                 <p className="text-sm text-gray-600 mt-1">
-                  Showing {initialProducts.length} of latest products
+                  {initialMeta.total} products
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Hero slider */}
           <section>
             <CategoryHeroSlider banners={banners} />
           </section>
 
-          {/* Products section with title */}
           <section>
             <h2 className="text-md md:text-xl font-semibold text-gray-800 mb-4">
               All Products - {title}
             </h2>
             <CategoryProducts
               initialProducts={initialProducts}
+              initialMeta={initialMeta}
               subcategorySlug={slug}
             />
           </section>
@@ -92,27 +104,23 @@ export default async function CategoryView({ slug, isSubcategory = false }: Cate
   // Original category logic
   const [categoriesRes, productsRes] = await Promise.all([
     fetchCategories().catch(() => ({ ok: true, data: [] as Category[] })),
-    fetchProducts({ category: slug, limit: 8, inStock: "true" }).catch(() => ({
+    fetchProducts({ category: slug, limit: 24, inStock: "true" }).catch(() => ({
       ok: true,
-      data: [] as Product[],
+      data: { items: [] as Product[], page: 1, pages: 1, total: 0, limit: 24 },
     })),
   ]);
 
   const categories: Category[] =
     (categoriesRes && (categoriesRes as any).data) || [];
   const activeCategory = categories.find((c) => c.slug === slug);
-  
-  // Fetch subcategories for this category
+
   const subcategoriesRes = activeCategory
     ? await fetchSubcategories(activeCategory._id).catch(() => ({ ok: true, data: [] }))
     : { ok: true, data: [] };
 
-  const rawProducts = (productsRes && (productsRes as any).data) || [];
-  const initialProducts: Product[] = Array.isArray(rawProducts) 
-    ? rawProducts 
-    : Array.isArray(rawProducts?.items) 
-    ? rawProducts.items 
-    : [];
+  const { items: initialProducts, meta: initialMeta } = extractMeta(
+    (productsRes as any)?.data
+  );
 
   const subcategories = subcategoriesRes?.data || [];
   const title =
@@ -122,7 +130,7 @@ export default async function CategoryView({ slug, isSubcategory = false }: Cate
     ? (activeCategory as any).images.map((image: string, index: number) => ({
         _id: `${activeCategory?._id}-${index}`,
         title: title,
-        image: image
+        image: image,
       }))
     : [];
 
@@ -139,19 +147,16 @@ export default async function CategoryView({ slug, isSubcategory = false }: Cate
                 {title}
               </h1>
               <p className="text-sm text-gray-600 mt-1">
-                Showing {initialProducts.length} of latest products
+                {initialMeta.total} products
               </p>
             </div>
           </div>
         </div>
 
-        {/* Hero slider */}
         <section>
-          {/* pass banners array as prop to client slider */}
           <CategoryHeroSlider banners={banners} />
         </section>
 
-        {/* Subcategories */}
         {subcategories.length > 0 && (
           <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
             <div className="mb-3 flex items-center justify-between">
@@ -198,13 +203,13 @@ export default async function CategoryView({ slug, isSubcategory = false }: Cate
           </section>
         )}
 
-        {/* Products section with title */}
         <section>
           <h2 className="text-md md:text-xl font-semibold text-gray-800 mb-4">
             All Products - {title}
           </h2>
           <CategoryProducts
             initialProducts={initialProducts}
+            initialMeta={initialMeta}
             categorySlug={slug}
           />
         </section>
