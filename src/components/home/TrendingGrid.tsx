@@ -361,7 +361,7 @@ export default function TrendingGrid({
           {computedProducts.map((prod) => (
             <div
               key={prod.p._id}
-              className="bg-white min-w-[48%] max-w-[48%] flex-shrink-0 rounded-md overflow-hidden border border-cyan-300 shadow-sm p-2 flex flex-col gap-1"
+              className="bg-white min-w-[48%] max-w-[48%] shrink-0 rounded-md overflow-hidden border border-cyan-300 shadow-sm p-2 flex flex-col gap-1"
             >
               <div className="w-full">
                 <div className="relative h-24 rounded-md overflow-hidden border flex items-center justify-center bg-white">
@@ -425,7 +425,7 @@ export default function TrendingGrid({
                 <button
                   onClick={() => handleBuyNow(prod)}
                   disabled={prod.isOutOfStock || !!loadingStates[prod.p._id]}
-                  className="flex-1 px-1 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-md text-[10px] font-medium disabled:opacity-50 whitespace-nowrap"
+                  className="flex-1 px-1 py-1.5 bg-linear-to-r from-pink-600 to-rose-600 text-white rounded-md text-[10px] font-medium disabled:opacity-50 whitespace-nowrap"
                 >
                   {loadingStates[prod.p._id] ? "Processing..." : "Buy Now"}
                 </button>
@@ -436,7 +436,7 @@ export default function TrendingGrid({
           {/* See All Card */}
           <Link
             href="/search?tag=trending"
-            className="bg-white min-w-[48%] max-w-[48%] flex-shrink-0 rounded-md border border-gray-200 shadow-sm p-2 flex flex-col items-center justify-center gap-2"
+            className="bg-white min-w-[48%] max-w-[48%] shrink-0 rounded-md border border-gray-200 shadow-sm p-2 flex flex-col items-center justify-center gap-2"
           >
             <div className="w-12 h-12 rounded-full bg-cyan-500 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="white" className="w-6 h-6">
@@ -455,7 +455,7 @@ export default function TrendingGrid({
               key={prod.p._id}
               className={`group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm ${prod.isOutOfStock ? "opacity-60 grayscale" : "hover:shadow-md hover:border-gray-300"} transition-all duration-300 h-full flex flex-col`}
             >
-              <div className="relative w-full h-44 sm:h-52 md:h-64 flex-shrink-0 flex items-center justify-center">
+              <div className="relative w-full h-44 sm:h-52 md:h-64 shrink-0 flex items-center justify-center">
                 <Link
                   href={`/products/${prod.p.slug}`}
                   className="w-full h-full block"
