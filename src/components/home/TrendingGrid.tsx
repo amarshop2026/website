@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "react-hot-toast";
-import { createOrder } from "@/services/orders";
 import type { AppProduct } from "@/types/product";
 
 interface TrendingGridProps {
@@ -116,7 +115,7 @@ export default function TrendingGrid({
     setQuantities((prev) => {
       const next: Record<string, number> = { ...prev };
       for (const p of products) {
-        if (!next[p._id]) next[p._id] = 1;
+        if (!(p._id in next)) next[p._id] = 0;
       }
       return next;
     });
@@ -154,8 +153,8 @@ export default function TrendingGrid({
       const compare = Number(product.compareAtPrice ?? 0);
       const discount = calculateDiscount(price, compare);
       const availableStock = stockMap[product._id] ?? 0;
-      const quantity = quantities[product._id] || 1;
-      const total = price * quantity;
+      const quantity = quantities[product._id] ?? 0;
+      const total = quantity > 0 ? price * quantity : price;
       const isOutOfStock = availableStock === 0;
       const isLowStock =
         availableStock > 0 && availableStock <= LOW_STOCK_THRESHOLD;
@@ -190,7 +189,7 @@ export default function TrendingGrid({
   const incrementQuantity = useCallback(
     (productId: string) => {
       setQuantities((prev) => {
-        const current = prev[productId] || 1;
+        const current = prev[productId] ?? 0;
         const max = stockMap[productId] || 1;
         const next = Math.min(current + 1, Math.max(1, max));
         if (next === current) return prev;
@@ -202,8 +201,8 @@ export default function TrendingGrid({
 
   const decrementQuantity = useCallback((productId: string) => {
     setQuantities((prev) => {
-      const current = prev[productId] || 1;
-      const next = Math.max(1, current - 1);
+      const current = prev[productId] ?? 0;
+      const next = Math.max(0, current - 1);
       if (next === current) return prev;
       return { ...prev, [productId]: next };
     });
@@ -234,7 +233,7 @@ export default function TrendingGrid({
           quantity: qty,
         });
         toast.success(`${qty} × ${p.title} added to cart`);
-        setQuantities((prev) => ({ ...prev, [p._id]: 1 }));
+        setQuantities((prev) => ({ ...prev, [p._id]: 0 }));
       } catch (err) {
         console.error("Add to Bag error:", err);
         toast.error("Could not Add to Bag");
@@ -388,7 +387,7 @@ export default function TrendingGrid({
 
               <div className="w-full">
                 <div className="text-sm text-black font-bold">
-                  {formatPrice(prod.price * prod.qty)}
+                  {formatPrice(prod.total)}
                 </div>
               </div>
 
@@ -399,7 +398,7 @@ export default function TrendingGrid({
                 <div className="flex items-center gap-0.5 bg-gray-200 rounded px-1 py-0.5">
                   <button
                     onClick={() => decrementQuantity(prod.p._id)}
-                    disabled={!!loadingStates[prod.p._id] || prod.qty <= 1}
+                    disabled={!!loadingStates[prod.p._id] || prod.qty <= 0}
                     className="w-5 h-5 rounded bg-white text-black flex items-center justify-center text-xs font-bold disabled:opacity-50"
                   >
                     −
@@ -498,7 +497,7 @@ export default function TrendingGrid({
                       <button
                         onClick={() => decrementQuantity(prod.p._id)}
                         disabled={
-                          !!loadingStates[prod.p._id] || prod.qty <= 1
+                          !!loadingStates[prod.p._id] || prod.qty <= 0
                         }
                         className="w-6 h-6 rounded-md bg-white text-black border border-gray-300 flex items-center justify-center font-bold text-base hover:bg-gray-50 disabled:opacity-50"
                       >

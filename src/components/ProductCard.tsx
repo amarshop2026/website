@@ -177,7 +177,7 @@ export default function ProductCard({
     }
   };
 
-  const totalPrice = price * quantity;
+  const totalPrice = quantity > 0 ? price * quantity : price;
 
   /* -----------------------
      Desktop / original card
@@ -361,11 +361,11 @@ export default function ProductCard({
           </h3>
           <div className="flex items-center gap-1 mt-0.5">
             <div className="text-sm text-black font-bold">
-              {formatPrice(price * quantity)}
+              {formatPrice(quantity > 0 ? price * quantity : price)}
             </div>
             {compare > price && (
               <div className="text-[10px] text-gray-500 line-through">
-                {formatPrice(compare * quantity)}
+                {formatPrice(quantity > 0 ? compare * quantity : compare)}
               </div>
             )}
           </div>

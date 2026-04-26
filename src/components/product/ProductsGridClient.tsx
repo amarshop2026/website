@@ -118,7 +118,7 @@ export default function ProductsGridClient({
       let changed = false;
       items.forEach((p) => {
         if (!(p._id in next)) {
-          next[p._id] = 1;
+          next[p._id] = 0;
           changed = true;
         }
       });
@@ -154,7 +154,7 @@ export default function ProductsGridClient({
     (productId: string, newQty: number) => {
       setQuantities((prev) => {
         const maxAllowed = Math.max(1, stockMap[productId] ?? 1);
-        const safe = Math.max(1, Math.min(newQty, maxAllowed));
+        const safe = Math.max(0, Math.min(newQty, maxAllowed));
         if (prev[productId] === safe) return prev;
         return { ...prev, [productId]: safe };
       });
@@ -165,7 +165,7 @@ export default function ProductsGridClient({
   const incrementQuantity = useCallback(
     (productId: string) => {
       setQuantities((prev) => {
-        const cur = prev[productId] ?? 1;
+        const cur = prev[productId] ?? 0;
         const maxAllowed = Math.max(1, stockMap[productId] ?? 1);
         const next = Math.min(cur + 1, maxAllowed);
         return { ...prev, [productId]: next };
@@ -176,8 +176,8 @@ export default function ProductsGridClient({
 
   const decrementQuantity = useCallback((productId: string) => {
     setQuantities((prev) => {
-      const cur = prev[productId] ?? 1;
-      const next = Math.max(1, cur - 1);
+      const cur = prev[productId] ?? 0;
+      const next = Math.max(0, cur - 1);
       return { ...prev, [productId]: next };
     });
   }, []);
@@ -215,7 +215,7 @@ export default function ProductsGridClient({
 
         toast.success(`${qty} × ${p.title} added to cart`);
         // reset qty
-        setQuantities((prev) => ({ ...prev, [id]: 1 }));
+        setQuantities((prev) => ({ ...prev, [id]: 0 }));
       } catch (err) {
         console.error("Add to Bag failed", err);
         toast.error("Failed to Add to Bag. Please try again.");
@@ -229,7 +229,7 @@ export default function ProductsGridClient({
   const handleBuyNow = useCallback(
     async (p: Product) => {
       const id = p._id;
-      const qty = quantities[id] ?? 1;
+      const qty = quantities[id] ?? 0;
       const stock = Math.max(0, Number(p.stock ?? p.availableStock ?? 0));
 
       if (qty <= 0) {
@@ -275,7 +275,7 @@ export default function ProductsGridClient({
         //   }));
         // }
 
-        setQuantities((prev) => ({ ...prev, [id]: 1 }));
+        setQuantities((prev) => ({ ...prev, [id]: 0 }));
         toast.success(`${qty} × ${p.title} added to cart`);
         setTimeout(() => {
           if (typeof window !== "undefined") window.location.href = "/cart";
@@ -322,7 +322,7 @@ export default function ProductsGridClient({
             Number(p.price ?? 0),
             Number(p.compareAtPrice ?? 0)
           );
-          const qty = quantities[p._id] ?? 1;
+          const qty = quantities[p._id] ?? 0;
           const loadingState = !!loadingStates[p._id];
           const stock = Math.max(0, Number(p.stock ?? p.availableStock ?? 0));
           const reserved =
@@ -408,7 +408,7 @@ export default function ProductsGridClient({
                   <div className="flex items-center gap-1 bg-gray-100 rounded-md p-1">
                     <button
                       onClick={() => decrementQuantity(p._id)}
-                      disabled={loadingState || qty <= 1}
+                      disabled={loadingState || qty <= 0}
                       className="w-6 h-6 rounded-md bg-white text-black border flex items-center justify-center disabled:opacity-50"
                       aria-label={`Decrease quantity for ${p.title}`}
                     >
@@ -431,7 +431,7 @@ export default function ProductsGridClient({
 
                   <div className="mt-1">
                     <div className="text-sm text-black font-semibold">
-                      ৳{((Number(p.price) || 0) * qty).toLocaleString()}
+                      ৳{((Number(p.price) || 0) * qty || Number(p.price) || 0).toLocaleString()}
                     </div>
                     {showCompare && (
                       <div className="text-xs text-gray-500 line-through">

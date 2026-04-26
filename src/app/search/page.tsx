@@ -179,7 +179,7 @@ export default function SearchPageRTK() {
         const id = String(p._id ?? "");
         if (!id) continue;
         if (!(id in next)) {
-          next[id] = 1;
+          next[id] = 0;
           changed = true;
         }
       }
@@ -205,7 +205,7 @@ export default function SearchPageRTK() {
   const updateQuantity = useCallback(
     (productId: string, newQty: number, maxQty = 1) => {
       setQuantities((prev) => {
-        const safe = Math.max(1, Math.min(newQty, Math.max(1, maxQty)));
+        const safe = Math.max(0, Math.min(newQty, Math.max(1, maxQty)));
         if (prev[productId] === safe) return prev;
         return { ...prev, [productId]: safe };
       });
@@ -215,7 +215,7 @@ export default function SearchPageRTK() {
 
   const incrementQuantity = useCallback((productId: string, maxQty = 1) => {
     setQuantities((prev) => {
-      const cur = prev[productId] ?? 1;
+      const cur = prev[productId] ?? 0;
       const safe = Math.min(maxQty, cur + 1);
       return { ...prev, [productId]: safe };
     });
@@ -223,8 +223,8 @@ export default function SearchPageRTK() {
 
   const decrementQuantity = useCallback((productId: string) => {
     setQuantities((prev) => {
-      const cur = prev[productId] ?? 1;
-      const safe = Math.max(1, cur - 1);
+      const cur = prev[productId] ?? 0;
+      const safe = Math.max(0, cur - 1);
       return { ...prev, [productId]: safe };
     });
   }, []);
@@ -233,7 +233,7 @@ export default function SearchPageRTK() {
   const handleAddToCart = useCallback(
     async (p: Product) => {
       const id = p._id;
-      const qty = quantities[id] ?? 1;
+      const qty = quantities[id] ?? 0;
       const stock = Math.max(0, Number(p.stock ?? 0));
 
       if (qty <= 0) {
@@ -266,7 +266,7 @@ export default function SearchPageRTK() {
         toast.success(`${qty} × ${p.title} added to cart`);
 
         // reset qty
-        setQuantities((prev) => ({ ...prev, [id]: 1 }));
+        setQuantities((prev) => ({ ...prev, [id]: 0 }));
       } catch (err) {
         console.error("Add to Bag failed", err);
         toast.error("Failed to Add to Bag. Please try again.");
@@ -281,7 +281,7 @@ export default function SearchPageRTK() {
   const handleBuyNow = useCallback(
     async (p: Product) => {
       const id = p._id;
-      const qty = quantities[id] ?? 1;
+      const qty = quantities[id] ?? 0;
       const stock = Math.max(0, Number(p.stock ?? 0));
 
       if (qty <= 0) {
@@ -406,7 +406,7 @@ export default function SearchPageRTK() {
                   )
                 : 0;
 
-              const qty = quantities[p._id ?? p._id] ?? quantities[p._id] ?? 1;
+              const qty = quantities[p._id ?? p._id] ?? quantities[p._id] ?? 0;
               const loading = !!loadingStates[p._id];
               const stock = Math.max(0, Number(p.stock ?? 0));
 
@@ -481,7 +481,7 @@ export default function SearchPageRTK() {
                     <div>
                       <div className="mt-1">
                         <div className="text-sm text-black font-semibold">
-                          {`Total: ৳ ${((Number(p.price) || 0) * (quantities[p._id] ?? 1)).toLocaleString()}`}
+                          {`Total: ৳ ${((Number(p.price) || 0) * (quantities[p._id] ?? 0) || Number(p.price) || 0).toLocaleString()}`}
                         </div>
                         {/* {showCompare && (
                           <div className="text-xs text-gray-500 line-through">
@@ -496,7 +496,7 @@ export default function SearchPageRTK() {
                       <div className="flex items-center gap-1 bg-gray-100 rounded-md p-1">
                         <button
                           onClick={() => decrementQuantity(p._id)}
-                          disabled={loading || (quantities[p._id] ?? 1) <= 1}
+                          disabled={loading || (quantities[p._id] ?? 0) <= 0}
                           className="w-6 h-6 rounded-md bg-white text-black border flex items-center justify-center disabled:opacity-50"
                           aria-label={`Decrease quantity for ${p.title}`}
                         >
@@ -504,7 +504,7 @@ export default function SearchPageRTK() {
                         </button>
 
                         <div className="flex-1 text-black text-center font-bold">
-                          {quantities[p._id] ?? 1}
+                          {quantities[p._id] ?? 0}
                         </div>
 
                         <button
