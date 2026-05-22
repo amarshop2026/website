@@ -16,11 +16,25 @@ interface Product {
   stock: number;
 }
 
+interface Section {
+  type: string;
+  content?: {
+    title?: string;
+    description?: string;
+    buttonText?: string;
+    imageUrl?: string;
+    features?: Array<{icon: string; title: string; description: string}>;
+    items?: Array<{rating: number; review: string; name: string; location: string}>;
+    faqs?: Array<{question: string; answer: string}>;
+    [key: string]: unknown;
+  };
+}
+
 interface LandingPageData {
   _id: string;
   title: string;
   slug: string;
-  sections: Array<Record<string, any>>;
+  sections: Section[];
   assignedProducts: Product[];
   seo: {
     title: string;
@@ -75,8 +89,7 @@ export default function LandingPageView() {
 
     addToCart({
       _id: product._id,
-      id: product.id,
-      name: product.name,
+      title: product.name,
       price: product.price,
       image: product.image,
       quantity: 1,
@@ -199,7 +212,7 @@ export default function LandingPageView() {
                   <div className="bg-gray-50 rounded-lg p-8">
                     <h2 className="text-2xl font-bold mb-8">{section.content?.title}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                      {section.content?.features?.map((feature: any, i: number) => (
+                      {(section.content?.features as Array<{icon: string; title: string; description: string}>)?.map((feature, i: number) => (
                         <div key={i} className="text-center">
                           <div className="text-4xl mb-4">{feature.icon}</div>
                           <h3 className="font-semibold mb-2">{feature.title}</h3>
@@ -214,14 +227,14 @@ export default function LandingPageView() {
                   <div className="bg-gray-50 rounded-lg p-8">
                     <h2 className="text-2xl font-bold mb-8">{section.content?.title}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {section.content?.items?.map((testimonial: any, i: number) => (
+                      {(section.content?.items as Array<{rating: number; review: string; name: string; location: string}>)?.map((testimonial, i: number) => (
                         <div key={i} className="bg-white rounded-lg p-6 border border-gray-200">
                           <div className="flex gap-1 mb-4">
                             {[...Array(testimonial.rating || 5)].map((_, j) => (
                               <span key={j} className="text-yellow-400">⭐</span>
                             ))}
                           </div>
-                          <p className="text-gray-600 mb-4">"{testimonial.review}"</p>
+                          <p className="text-gray-600 mb-4">&quot;{testimonial.review}&quot;</p>
                           <p className="font-semibold text-gray-900">{testimonial.name}</p>
                           <p className="text-sm text-gray-500">{testimonial.location}</p>
                         </div>
@@ -234,7 +247,7 @@ export default function LandingPageView() {
                   <div className="bg-gray-50 rounded-lg p-8">
                     <h2 className="text-2xl font-bold mb-8">{section.content?.title}</h2>
                     <div className="space-y-4">
-                      {section.content?.faqs?.map((faq: any, i: number) => (
+                      {(section.content?.faqs as Array<{question: string; answer: string}>)?.map((faq, i: number) => (
                         <details key={i} className="bg-white rounded-lg p-4 border border-gray-200">
                           <summary className="font-semibold cursor-pointer text-gray-900">
                             {faq.question}

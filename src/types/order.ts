@@ -34,6 +34,7 @@ export interface CreateOrderDTO {
 export interface OrderCreateResult {
   ok: boolean;
   orderId?: string;
+  _id?: string;
   message?: string;
   updatedProducts?: Array<{ _id: string; stock: number }>;
   timestamp?: string;

@@ -103,7 +103,7 @@ export default function CheckoutPage() {
         clearCart();
 
         // ✅ REDIRECT TO THANK YOU PAGE WITH ORDER ID
-        const orderId = result.data?.id || result.data?._id;
+        const orderId = result.data?.orderId || result.data?._id;
         const phone = customerData.phone;
         setTimeout(() => {
           router.push(`/thank-you?orderId=${orderId}&phone=${phone}`);

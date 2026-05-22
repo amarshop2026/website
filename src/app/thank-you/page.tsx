@@ -118,7 +118,7 @@ export default function ThankYouPage() {
             <CheckCircle className="w-16 h-16" />
           </div>
           <h1 className="text-4xl font-bold mb-2">Order Confirmed!</h1>
-          <p className="text-lg opacity-90">Thank you for your order. We'll get it to you soon.</p>
+          <p className="text-lg opacity-90">Thank you for your order. We&apos;ll get it to you soon.</p>
         </div>
       </div>
 
@@ -254,15 +254,15 @@ export default function ThankYouPage() {
 
         {/* Next Steps */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">What's Next?</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">What&apos;s Next?</h2>
           <ol className="space-y-3 text-gray-700">
             <li className="flex gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
-              <span>We'll confirm your order and prepare it for shipment</span>
+              <span>We&apos;ll confirm your order and prepare it for shipment</span>
             </li>
             <li className="flex gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
-              <span>You'll receive a tracking number via SMS/Call</span>
+              <span>You&apos;ll receive a tracking number via SMS/Call</span>
             </li>
             <li className="flex gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
