@@ -102,8 +102,12 @@ export default function CheckoutPage() {
         // ✅ CLEAR CART AFTER SUCCESSFUL ORDER
         clearCart();
 
-        // ✅ REDIRECT AFTER DELAY
-        setTimeout(() => router.push("/orders"), 1500);
+        // ✅ REDIRECT TO THANK YOU PAGE WITH ORDER ID
+        const orderId = result.data?.id || result.data?._id;
+        const phone = customerData.phone;
+        setTimeout(() => {
+          router.push(`/thank-you?orderId=${orderId}&phone=${phone}`);
+        }, 1500);
       } else {
         throw new Error(result.message || "Failed to place order");
       }
